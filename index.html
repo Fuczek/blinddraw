@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div style="display: flex; min-width: 100%; flex-direction: column">
+        <div id="top-bar" style="display: flex; min-height: 6vh; min-width: 100%; justify-tracks: center; margin-top: 1vh">
+            <div id="logo" style="display: flex; justify-content: left; font-size: 5vw; margin-left: 5vw; cursor: pointer">    
+                <img src="images/blinddraw.svg" alt="f.works" style="cursor: pointer">
+            </div>
+        <div id="info" style="display: flex; justify-content: right; align-items: center; font-size: 2vw; margin-left: auto">
+            <div id="icon1" style="margin-right: 1vw; cursor: pointer">?</div>
+            <div id="icon2" style="margin-left: 1vw; margin-right: 5vw; cursor: pointer">ⓘ</div>
+        </div>
+    </div>
+
+    <div class="stripe" style="display:flex; min-height: 0.2vh; max-height: 0.2vh; max-width: 90%; align-items: center; justify-content: center; background-color: #91A8D3; margin-top: 1vh; margin-left: 5vw; border-radius: 5px;"></div>
+
+    <div style="display: flex; max-width: 70%; min-height: 70vh; justify-content: center; align-items: center; margin-left: 15vw; margin-top: vh">
+        <div style="display: relative; flex-direction: column; min-width: 50%; min-height: 40vw;">
+            <select id="imageSelector" value="Choose a map" class="customSelect" style="display: absolute; top: 0; left: 0; min-width: 100%; align-items: center; border-radius: 50px; background: white; min-height: 6vh; margin-top: 4vh; font-size: 2vh; padding-left: 1vw;";>
+                <option value="default" selected disabled>Choose a map...</option>
+                <option value='images/carbon_layout.png'>Palmont City (NFS Carbon)</option>
+                <option value='images/map2_layout.png'>Rockport City (NFS Most Wanted)</option>
+                <option value='images/horizon5_layout.png'>Forza Horizon 5 (Guanajuato)</option>
+                <option value='images/sr_layout.png'>Summoner's Rift (League of Legends)</option>
+                <option value='images/de_dust_layout.png'>De Dust 2 (Counter Strike)</option>
+                <option value='images/the_division_layout.png'>New York (The Division)</option>
+            </select>
+
+            <p style="display: flex; align-items: center; justify-content: center; font-size: 1.5vh; color: #B1C0D1">
+                ⓘ Changing the map during drawing will reset your current progress
+            </p>
+
+            <div id="canvas-container" style="position: relative; min-width: 35vw; min-height: 35vw;">
+                <canvas id="hoverCanvas" style="position: absolute; top: 0; left: 0; z-index: 5; pointer-events: none;"></canvas>
+                <canvas id="greenCanvas"  style="position: absolute; top: 0; left: 0; z-index: 4; pointer-events: none;"></canvas>
+                <canvas id="drawingCanvas" style="position: absolute; top: 0; left: 0; z-index: 3;"></canvas>
+                <canvas id="backgroundCanvas" style="position: absolute; top: 0; left: 0; z-index: -1;"></canvas>
+                <canvas id="imageBgCanvas" style="position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
+                <canvas style="position: absolute; top: 0; left: 0; z-index: -5; pointer-events: none; background-color: #91A8D3; border-radius: 25px;"></canvas>
+            </div>
+
+            <button id="compareButton" style="display: flex; min-width: 100%; border-radius: 50px; background: white; min-height: 6vh; justify-content: center; align-items: center; margin-top: 1vw; font-size: 2.5vh";>Check how you did!</button>
+        </div>
+
+        <div style="display: flex; min-width: 50%; min-height: 90vh;">
+            <div style="position: relative; min-width: 35vw; min-height: 35vw;">
+                <div id="faq" style="position: absolute; top: 0; left: 0; font-size: 3vh; text-align: center; padding: 3vw; margin-top: 15vh; color: #B1C0D1">
+                    <p>Blind draw is a drawing game in which your goal is to draw your favorite video game maps map from memory.</p>
+                    <p>To start, choose a map that you want to draw from the available presets and try to achieve the best score.</p>
+                </div>
+                <div id="result" style="position: absolute; top: 0; left: 0; text-align: center; padding: 3vw; color: #B1C0D1; min-width: 29vw; margin-top: 20vh; visibility: hidden; font-size: 1vw;">
+                    <h1>You've got</h1>
+                    <p id="score" style="font-size: 12vw; margin-top: -3vh; margin-bottom: -3vh">X%</p>
+                    <h1> of the map correct!</h1>
+                    <p id="time_spent" style="font-size: 1vw; margin-top: -1vh">You took x seconds.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stripe" style="display:flex; min-height: 0.2vh; max-height: 0.2vh; max-width: 90%; align-items: center; justify-content: center; background-color: #91A8D3; margin-top: 3vh; margin-left: 5vw; border-radius: 5px;"></div>
+
+    <div class="footer" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+        <p style="font-size: 1vw; margin-bottom: 0.5vh; margin-top: 1.5vh; color: #B1C0D1">from</p>
+        <img src="images/fworks.svg" alt="f.works" height="40vh" style="cursor: pointer; margin-bottom: 1vh;">
+    </div>
+    <!--
+        <div class="result" style="margin-top: 100px; display: flex; flex-direction:column; align-items: center; justify-content: center;">
+            <h1>
+                You've got
+            </h1>
+            <p id="score" style="font-size: 10vh; margin-top: 10px; margin-bottom: 10px">
+                X%
+            </p>
+            <h1> of the map correct!</h1>
+        </div>
+-->
+
+
+
+    <script>
+    const drawingCanvas = document.getElementById('drawingCanvas');
+    const drawingCtx = drawingCanvas.getContext('2d');
+
+    const backgroundCanvas = document.getElementById('backgroundCanvas');
+    const backgroundCtx = backgroundCanvas.getContext('2d');
+
+    const greenCanvas = document.getElementById('greenCanvas');
+    const greenCtx = greenCanvas.getContext('2d');
+
+    const imageBgCanvas = document.getElementById('imageBgCanvas');
+    const imageBgCtx = imageBgCanvas.getContext('2d');
+
+    const imageSelector = document.getElementById('imageSelector');
+
+    const bg_list = {
+        "images/carbon_layout.png": "images/carbon_background.png",
+        "images/map2_layout.png": "images/map2_image_bg.png",
+        "images/sr_layout.png": "images/sr_background.png",
+        "images/de_dust_layout.png": "images/de_dust_background.png",
+        "images/horizon5_layout.png": "images/horizon5_background.png",
+        "images/the_division_layout.png": "images/the_division_background.png",
+    }
+
+    let containerWidth
+    let containerHeight
+    
+    function resizeCanvas() {
+    const container = document.getElementById('canvas-container');
+    const canvases = container.querySelectorAll('canvas');
+
+    
+    canvases.forEach(canvas => {
+        console.log('a')
+        // Set the canvas width and height based on the container's width and height
+        containerWidth = container.offsetWidth;
+        containerHeight = container.offsetHeight;
+        // Set the canvas internal size (width and height attributes)
+        canvas.width = containerWidth;
+        canvas.height = containerHeight;
+
+        // Optionally, scale content here if needed (e.g., drawing at different scale)
+        //const ctx = canvas.getContext('2d');
+        //ctx.scale(containerWidth / 1000, containerHeight / 1000); // Example scaling (adjust based on your design)
+     });
+    }
+    // Initial resize
+    resizeCanvas();
+    // Resize on window resize
+    window.addEventListener('resize', resizeCanvas);
+
+    // Function to load and draw an image on the canvas
+    function loadImage(imagePath) {
+        if (imagePath == "default") {
+            compareButton.disabled = true
+            compareButton.style.cursor = "normal"
+            return
+        }
+        compareButton.disabled = false
+        compareButton.style.cursor = "pointer"
+
+        document.getElementById('result').style.visibility = 'hidden';
+      document.getElementById('faq').style.visibility = 'visible';
+        const img = new Image();
+        img.src = imagePath;
+
+        img.onerror = () => {
+            alert('Failed to load image. Please check the path.');
+        };
+
+        img.onload = () => {
+            // Resize the canvas to match the image dimensions
+
+            // Draw the image onto the canvas
+            backgroundCtx.drawImage(img, 0, 0, containerWidth, containerHeight);
+
+            // Get image data from the canvas
+            const imageData = backgroundCtx.getImageData(0, 0, containerWidth, containerHeight);
+            const data = imageData.data;
+            // Put the modified data back to the canvas
+            backgroundCtx.putImageData(imageData, 0, 0);
+
+            //IMAGEBG
+
+            
+        }
+
+        const bgImg = new Image();
+        bgImg.src = bg_list[imageSelector.value]
+
+        bgImg.onload = () => {
+            imageBgCtx.beginPath();
+            imageBgCtx.moveTo(20, 0);
+            imageBgCtx.arcTo(imageBgCanvas.width, 0, imageBgCanvas.width, imageBgCanvas.height, 20);
+            imageBgCtx.arcTo(imageBgCanvas.width, imageBgCanvas.height, 0, imageBgCanvas.height, 20);
+            imageBgCtx.arcTo(0, imageBgCanvas.height, 0, 0, 20);
+            imageBgCtx.arcTo(0, 0, imageBgCanvas.width, 0, 20);
+            imageBgCtx.closePath();
+            imageBgCtx.clip();
+
+            imageBgCtx.drawImage(bgImg, 0, 0, containerWidth, containerHeight)
+            const imageBgData = imageBgCtx.getImageData(0, 0, containerWidth, containerHeight);
+            const Bgdata = imageBgData.data;
+        }
+    }
+
+    const resultScore = document.getElementById('score');
+    imageSelector.addEventListener('change', (event) => {
+        
+        // Clear the entire canvas
+        drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        greenCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        backgroundCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        resultScore.textContent = "0%"
+        timer = null
+
+        const selectedImage = event.target.value;
+        console.log(event.target.value)
+        loadImage(selectedImage); // Load the selected image
+    });
+
+    const compareButton = document.getElementById('compareButton');
+    compareButton.addEventListener('click', compareCanvases);
+
+    // Load the default image on page load
+    loadImage(imageSelector.value);
+
+     // Create and set up an overlay canvas
+    const overlayCanvas = document.getElementById('hoverCanvas');
+    const overlayCtx = overlayCanvas.getContext('2d');
+
+    let brushRadius = 8; // Initial brush radius
+
+    const minBrushSize = 4; // Minimum brush size
+    const maxBrushSize = 48; // Maximum brush size
+
+    // Your existing drawing logic
+    let isDrawing = false; // Flag to track if the mouse is pressed
+    drawingCtx.strokeStyle = 'black';
+    drawingCtx.lineWidth = brushRadius; // Line width
+    drawingCtx.lineCap = 'round'; // Smooth line ends
+
+    let timer_running = false
+    let start_time = null
+    // Start drawing when the mouse is pressed
+    drawingCanvas.addEventListener('mousedown', (e) => {
+        if (!timer_running) {
+            timer_running = true
+            start_time = new Date().getTime();
+        }
+        drawingCtx.lineWidth = brushRadius
+        isDrawing = true;
+        const { offsetX, offsetY } = e; // Get mouse position relative to the canvas
+        drawingCtx.beginPath(); // Start a new path
+        drawingCtx.moveTo(offsetX, offsetY); // Move to the starting point
+    });
+
+    let currentCursorX = 0;
+    let currentCursorY = 0;
+    // Draw as the mouse moves
+
+    function getMousePosition(event, canvas) {
+        const rect = canvas.getBoundingClientRect(); // Get the canvas position relative to the viewport
+        const scaleX = canvas.width / rect.width;  // Scale factor for width
+        const scaleY = canvas.height / rect.height; // Scale factor for height
+        currentCursorX = (event.clientX - rect.left) * scaleX;  // Mouse x relative to canvas
+        currentCursorY = (event.clientY - rect.top) * scaleY;   // Mouse y relative to canvas
+    }
+
+    drawingCanvas.addEventListener('mousemove', (e) => {
+        const mousePos = getMousePosition(event, drawingCanvas);
+
+        // Draw on the drawing canvas if in drawing mode
+        if (isDrawing) {
+            drawingCtx.lineTo(currentCursorX, currentCursorY);
+            drawingCtx.stroke();
+        }
+        // Draw the hover brush circle
+        drawHoverBrush(currentCursorX, currentCursorY);
+    });
+
+    // Stop drawing when the mouse is released
+    drawingCanvas.addEventListener('mouseup', () => {
+        isDrawing = false;
+        drawingCtx.closePath(); // End the current path
+    });
+
+    // Stop drawing if the mouse leaves the canvas
+    drawingCanvas.addEventListener('mouseleave', () => {
+        isDrawing = false;
+        drawingCtx.closePath();
+    });
+
+    // Clear the brush circle when the mouse leaves the canvas
+    drawingCanvas.addEventListener('mouseleave', () => {
+        overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    });
+
+    function drawHoverBrush(x, y) {
+      overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height); // Clear previous hover circle
+
+      if (!isDrawing) {
+            overlayCtx.beginPath();
+            overlayCtx.arc(x, y, brushRadius - 4, 0, Math.PI * 2);
+
+            // Fill the circle with a color
+            overlayCtx.fillStyle = drawingCtx.strokeStyle; // Semi-transparent blue
+            overlayCtx.fill();
+        }
+    }
+
+    drawingCanvas.addEventListener('wheel', (e) => {
+        e.preventDefault(); // Prevent page scrolling
+        const delta = e.deltaY > 0 ? -1 : 1; // Determine scroll direction (up or down)
+
+        // Adjust brush size within limits
+        brushRadius = Math.min(
+            maxBrushSize,
+            Math.max(minBrushSize, brushRadius + delta)
+        );
+
+        // Optionally, log the brush size for debugging
+        //console.log(`Brush size: ${brushRadius}`);
+        drawHoverBrush(currentCursorX, currentCursorY);
+    });
+
+    // Draw something on the canvas (e.g., a black rectangle and a white rectangle)
+   // drawingCtx.fillStyle = 'black';
+    //drawingCtx.fillRect(0, 0, 300, 100); // Black rectangle
+
+    function compareCanvases() {
+        timer_running = false
+        let finish_time = new Date().getTime()
+        let time_spent = ((finish_time - start_time) / 1000.0).toFixed(2)
+        start_time = null
+
+        if (time_spent < 99999999) {
+            document.getElementById("time_spent").textContent = `You took ${time_spent} seconds.` 
+        } else {
+            document.getElementById("time_spent").textContent = `` 
+        }
+
+        const width = drawingCanvas.width;
+        const height = drawingCanvas.height;
+
+        // Get pixel data from both canvases
+        const drawingImageData = drawingCtx.getImageData(0, 0, width, height);
+        const backgroundImageData = backgroundCtx.getImageData(0, 0, width, height);
+
+        const drawingData = drawingImageData.data;
+        const backgroundData = backgroundImageData.data;
+        
+        greenCtx.putImageData(drawingImageData, 0, 0);
+
+        let count = 0
+        let full_count = 0
+        for (let i = 0; i < drawingData.length; i += 4) {
+            const r = drawingData[i];     // Red channel
+            const g = drawingData[i + 1]; // Green channel
+            const b = drawingData[i + 2]; // Blue channel
+            const a = drawingData[i + 3]; // Alpha channel
+
+            const r_b = backgroundData[i];
+            const g_b = backgroundData[i + 1];
+            const b_b = backgroundData[i + 2];
+            const a_b = backgroundData[i + 3];
+    
+            if (r_b === 0 && g_b === 0 && b_b === 0 && a_b === 0) { 
+                continue
+            }
+
+            if (r_b === 0 && g_b === 0 && b_b === 0 && a_b === 255) { 
+                full_count += 4
+            }
+
+            if (r === r_b && g === g_b && b === b_b && a === a_b) {
+                drawingData[i] = 172;
+                drawingData[i + 1] = 255;
+                drawingData[i + 2] = 34;
+                drawingData[i + 3] = 255;
+                count += 4
+            } else {
+                drawingData[i] = 250;
+                drawingData[i + 1] = 93;
+                drawingData[i + 2] = 179;
+                drawingData[i + 3] = 120;
+            }
+    }
+
+    drawingCtx.filter = 'hue-rotate(0deg)'; 
+
+    greenCtx.putImageData(drawingImageData, 0, 0);
+    
+    
+    function clamp(num, min, max) {
+        return num <= min 
+            ? min 
+            : num >= max 
+            ? max 
+            : num
+    }
+
+    let score = clamp((Math.round((count/(full_count)) * 100)), 0, 100)
+    animateNumber(0, score);
+
+    function animateNumber(startValue, endValue) {
+        let currentValue = startValue;
+        const duration = 250;  // Duration of the animation in milliseconds (2 seconds)
+        const increment = (endValue - startValue) / 100;  // Increment per frame
+
+        // Clear any previous interval (in case the button is clicked multiple times)
+        clearInterval(window.animationInterval);
+
+        window.animationInterval = setInterval(() => {
+            currentValue += increment;
+            if (currentValue >= endValue) {
+                currentValue = endValue;
+                clearInterval(window.animationInterval);  // Stop the animation
+            }
+
+            resultScore.style.color = `hsl(${1 * currentValue}, ${100}%, ${50}%)`;
+            resultScore.textContent = Math.round(currentValue) + "%"
+        }, duration / 1000);  // The interval duration to control animation speed
+        
+    }
+
+    document.getElementById('result').style.visibility = 'visible';
+    document.getElementById('faq').style.visibility = 'hidden';
+    
+    console.log(count, ' ', count/full_count, score)
+  }
+
+
+    </script>
+</body>
+</html>

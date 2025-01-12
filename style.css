@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'seoul';
+    src: url('fonts/seoulnamsancondensed-extrabold.ttf') format('truetype'),
+         url('fonts/seoulnamsancondensed-extrabold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #323B4B;
+    color: white;
+    margin: 0;
+    font-family: 'seoul', sans-serif;
+}
+
+select {
+    font-family: 'seoul', sans-serif;
+}
+
+button {
+    font-family: 'seoul', sans-serif;
+}
+
+.customSelect {
+    margin-right: 50px;  /* Adjust the space for the arrow */
+    text-indent: 5px;      /* Move the text slightly */
+    border: 2px solid darkblue;
+    width: 200px; /* Set the width as needed */
+}
